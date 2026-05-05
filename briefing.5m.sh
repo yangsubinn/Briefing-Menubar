@@ -26,7 +26,8 @@ MENU_EMOJI=$(cat "$EMOJI_FILE" 2>/dev/null || echo "📋")
 if [ -n "$TICKET" ]; then
   echo "$MENU_EMOJI $TICKET"
 else
-  echo "$MENU_EMOJI 브리핑"
+  SHORT_BRANCH=$(echo "$BRANCH" | sed 's|.*/||' | cut -c1-20)
+  echo "$MENU_EMOJI $SHORT_BRANCH"
 fi
 
 echo "---"
@@ -94,10 +95,15 @@ LAST_COMMIT=$(git log --oneline -1 2>/dev/null | cut -c 9-)
 echo "---"
 
 # ── 액션 ─────────────────────────────────────────────
-echo "🤖 브리핑 실행하기 | bash=$HOME/.briefing_update.sh refresh=true terminal=false"
-echo "-- ⏱ 백그라운드 실행 — 결과 반영까지 약 1분 소요 | color=gray"
-echo "💻 터미널 열기 | bash=$HOME/.briefing_open.sh terminal=false"
-echo "🔄 캐시 갱신 | bash=$HOME/.briefing_update.sh refresh=true terminal=false"
+CLAUDE_AVAILABLE=$(command -v claude &>/dev/null && echo "yes" || echo "no")
+if [ "$CLAUDE_AVAILABLE" = "yes" ]; then
+  echo "🤖 브리핑 실행하기 | bash=$HOME/.briefing_update.sh refresh=true terminal=false"
+  echo "-- ⏱ 백그라운드 실행 — 결과 반영까지 약 1분 소요 | color=gray"
+  echo "💻 터미널 열기 | bash=$HOME/.briefing_open.sh terminal=false"
+  echo "🔄 캐시 갱신 | bash=$HOME/.briefing_update.sh refresh=true terminal=false"
+else
+  echo "⚠️ Claude Code 미설치 — 브리핑 기능 비활성 | color=gray"
+fi
 echo "🕖 갱신: $UPDATED | color=gray size=11"
 echo "---"
 echo "🎨 메뉴바 이모지 변경"

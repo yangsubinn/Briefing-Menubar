@@ -35,12 +35,14 @@ fi
 echo -e "${GREEN}✓ jq${NC}"
 
 CLAUDE_PATH=$(which claude 2>/dev/null || echo "")
+CLAUDE_AVAILABLE=false
 if [ -z "$CLAUDE_PATH" ]; then
-  echo -e "${RED}✗ claude CLI를 찾을 수 없습니다.${NC}"
-  echo "  Claude Code를 먼저 설치해주세요: https://claude.ai/code"
-  exit 1
+  echo -e "${YELLOW}! claude CLI를 찾을 수 없습니다. Claude 브리핑 기능은 비활성화됩니다.${NC}"
+  echo "  설치 후 기능을 사용하려면: https://claude.ai/code"
+else
+  CLAUDE_AVAILABLE=true
+  echo -e "${GREEN}✓ claude CLI ($CLAUDE_PATH)${NC}"
 fi
-echo -e "${GREEN}✓ claude CLI ($CLAUDE_PATH)${NC}"
 
 if ! [ -d "/Applications/SwiftBar.app" ]; then
   echo -e "${YELLOW}! SwiftBar가 없습니다. 설치합니다...${NC}"
@@ -88,6 +90,14 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cp "$SCRIPT_DIR/briefing_update.sh" "$HOME/.briefing_update.sh"
 chmod +x "$HOME/.briefing_update.sh"
 echo -e "${GREEN}✓ ~/.briefing_update.sh 복사 완료${NC}"
+
+# 브리핑 스킬 설치 (Claude Code 있을 때만)
+if [ "$CLAUDE_AVAILABLE" = true ]; then
+  SKILL_DIR="$HOME/.claude/skills/briefing"
+  mkdir -p "$SKILL_DIR"
+  cp "$SCRIPT_DIR/SKILL.md" "$SKILL_DIR/SKILL.md"
+  echo -e "${GREEN}✓ 브리핑 스킬 설치 완료 (~/.claude/skills/briefing/)${NC}"
+fi
 
 # ── 터미널 앱 선택 ───────────────────────────────────
 echo "🖥️  사용할 터미널 앱을 선택해주세요:"
@@ -145,20 +155,24 @@ cp "$SCRIPT_DIR/briefing.5m.sh" "$PLUGIN_DIR/briefing.5m.sh"
 chmod +x "$PLUGIN_DIR/briefing.5m.sh"
 echo -e "${GREEN}✓ SwiftBar 플러그인 복사 완료${NC}"
 
-# ── cron 등록 ─────────────────────────────────────────
-CRON_JOB="0 * * * * $HOME/.briefing_update.sh >> /tmp/briefing_update.log 2>&1"
-if crontab -l 2>/dev/null | grep -q ".briefing_update.sh"; then
-  echo -e "${YELLOW}! cron이 이미 등록되어 있습니다. 건너뜁니다.${NC}"
-else
-  (crontab -l 2>/dev/null; echo "$CRON_JOB") | crontab -
-  echo -e "${GREEN}✓ cron 등록 완료 (매 정시 자동 갱신)${NC}"
-fi
+# ── cron 등록 (Claude Code 있을 때만) ────────────────
+if [ "$CLAUDE_AVAILABLE" = true ]; then
+  CRON_JOB="0 * * * * $HOME/.briefing_update.sh >> /tmp/briefing_update.log 2>&1"
+  if crontab -l 2>/dev/null | grep -q ".briefing_update.sh"; then
+    echo -e "${YELLOW}! cron이 이미 등록되어 있습니다. 건너뜁니다.${NC}"
+  else
+    (crontab -l 2>/dev/null; echo "$CRON_JOB") | crontab -
+    echo -e "${GREEN}✓ cron 등록 완료 (매 정시 자동 갱신)${NC}"
+  fi
 
-# ── 초기 캐시 생성 ────────────────────────────────────
-echo ""
-echo "🤖 초기 캐시 생성 중... (30초~1분 소요)"
-"$HOME/.briefing_update.sh"
-echo -e "${GREEN}✓ 캐시 생성 완료${NC}"
+  # ── 초기 캐시 생성 ──────────────────────────────────
+  echo ""
+  echo "🤖 초기 캐시 생성 중... (30초~1분 소요)"
+  "$HOME/.briefing_update.sh"
+  echo -e "${GREEN}✓ 캐시 생성 완료${NC}"
+else
+  echo -e "${YELLOW}! Claude Code 미설치 — 브리핑 기능은 Claude Code 설치 후 사용 가능합니다.${NC}"
+fi
 
 echo ""
 echo "================================"
