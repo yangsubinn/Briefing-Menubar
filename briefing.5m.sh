@@ -94,7 +94,9 @@ LAST_COMMIT=$(git log --oneline -1 2>/dev/null | cut -c 9-)
 echo "---"
 
 # ── 액션 ─────────────────────────────────────────────
-echo "🤖 터미널에서 브리핑 열기 | bash=$HOME/.briefing_open.sh terminal=false"
+echo "🤖 브리핑 실행하기 | bash=$HOME/.briefing_update.sh refresh=true terminal=false"
+echo "-- ⏱ 백그라운드 실행 — 결과 반영까지 약 1분 소요 | color=gray"
+echo "💻 터미널 열기 | bash=$HOME/.briefing_open.sh terminal=false"
 echo "🔄 캐시 갱신 | bash=$HOME/.briefing_update.sh refresh=true terminal=false"
 echo "🕖 갱신: $UPDATED | color=gray size=11"
 echo "---"
