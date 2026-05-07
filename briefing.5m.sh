@@ -107,6 +107,6 @@ fi
 echo "🕖 갱신: $UPDATED | color=gray size=11"
 echo "---"
 echo "🎨 메뉴바 이모지 변경"
-for emoji in "📋" "🚀" "💻" "🎯" "⚡" "🔧" "🌟" "🎮" "🧑‍💻" "🐛" "🐟" "🍀" "👾" "👻" "🐰" "🐶" "🏠" "🍻" "📮" "💌"; do
+for emoji in "📋" "🚀" "💻" "🎯" "⚡" "🔧" "🌟" "🎮" "🧑‍💻" "👩‍💻" "🐛" "🐟" "🍀" "👾" "👻" "🐰" "🐶" "🏠" "🍻" "📮" "💌"; do
   echo "-- $emoji | bash=/bin/sh param1=-c param2=\"printf '$emoji' > $EMOJI_FILE\" refresh=true terminal=false"
 done
