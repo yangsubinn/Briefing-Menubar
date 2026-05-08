@@ -23,12 +23,7 @@ CHANGES=$(git status --short 2>/dev/null | grep -c '')
 
 # 메뉴바 타이틀
 MENU_EMOJI=$(cat "$EMOJI_FILE" 2>/dev/null || echo "📋")
-if [ -n "$TICKET" ]; then
-  echo "$MENU_EMOJI $TICKET"
-else
-  SHORT_BRANCH=$(echo "$BRANCH" | sed 's|.*/||' | cut -c1-20)
-  echo "$MENU_EMOJI $SHORT_BRANCH"
-fi
+echo "$MENU_EMOJI"
 
 echo "---"
 
