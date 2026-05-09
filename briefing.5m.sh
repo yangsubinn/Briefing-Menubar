@@ -109,6 +109,23 @@ echo "---"
 
 # ── 섹션 4: 설정 ─────────────────────────────────────
 echo "설정 | color=#888888 size=11"
+
+# 다른 레포 추적하기
+REPOS_FILE="$HOME/.briefing_repos.txt"
+echo "🗂 다른 레포 추적하기"
+if [ -f "$REPOS_FILE" ]; then
+  while IFS= read -r repo; do
+    [ -z "$repo" ] && continue
+    repo_name=$(basename "$repo")
+    if [ "$repo" = "$REPO_DIR" ]; then
+      echo "-- ✓ $repo_name | color=#007AFF"
+    else
+      echo "-- $repo_name | bash=$HOME/.briefing_switch.sh param1=$repo refresh=true terminal=false"
+    fi
+  done < "$REPOS_FILE"
+fi
+echo "-- 새로운 레포 추가하기 | bash=$HOME/.briefing_add.sh refresh=true terminal=false"
+
 echo "🎨 메뉴바 이모지 변경"
 for emoji in "📋" "🚀" "💻" "🎯" "⚡" "🔧" "🌟" "🎮" "🧑‍💻" "👩‍💻" "🐛" "🐟" "🍀" "👾" "👻" "🐰" "🐶" "🏠" "🍻" "📮" "💌"; do
   echo "-- $emoji | bash=/bin/sh param1=-c param2=\"printf '$emoji' > $EMOJI_FILE\" refresh=true terminal=false"

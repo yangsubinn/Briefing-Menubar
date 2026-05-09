@@ -91,6 +91,25 @@ cp "$SCRIPT_DIR/briefing_update.sh" "$HOME/.briefing_update.sh"
 chmod +x "$HOME/.briefing_update.sh"
 echo -e "${GREEN}✓ ~/.briefing_update.sh 복사 완료${NC}"
 
+cp "$SCRIPT_DIR/briefing_context.sh" "$HOME/.briefing_context.sh"
+chmod +x "$HOME/.briefing_context.sh"
+echo -e "${GREEN}✓ ~/.briefing_context.sh 복사 완료${NC}"
+
+cp "$SCRIPT_DIR/briefing_switch.sh" "$HOME/.briefing_switch.sh"
+chmod +x "$HOME/.briefing_switch.sh"
+echo -e "${GREEN}✓ ~/.briefing_switch.sh 복사 완료${NC}"
+
+cp "$SCRIPT_DIR/briefing_add.sh" "$HOME/.briefing_add.sh"
+chmod +x "$HOME/.briefing_add.sh"
+echo -e "${GREEN}✓ ~/.briefing_add.sh 복사 완료${NC}"
+
+# 최근 레포 목록 초기화 (기존 파일 없을 때만)
+REPOS_FILE="$HOME/.briefing_repos.txt"
+if [ ! -f "$REPOS_FILE" ]; then
+  echo "$REPO_DIR" > "$REPOS_FILE"
+  echo -e "${GREEN}✓ 최근 레포 목록 초기화 완료${NC}"
+fi
+
 # 브리핑 스킬 설치 (Claude Code 있을 때만)
 if [ "$CLAUDE_AVAILABLE" = true ]; then
   SKILL_DIR="$HOME/.claude/skills/briefing"
