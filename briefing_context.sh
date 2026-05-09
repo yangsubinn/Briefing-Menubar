@@ -5,15 +5,15 @@
 
 export PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"
 
-ENV_FILE="$HOME/.briefing.env"
-[ -f "$ENV_FILE" ] && source "$ENV_FILE"
+# 인자로 디렉토리를 받으면 그걸 사용, 없으면 현재 디렉토리
+TARGET_DIR="${1:-$(pwd)}"
 
-if [ -z "$REPO_DIR" ]; then
-  echo "[ERROR] REPO_DIR not set. Run install.sh first."
+cd "$TARGET_DIR" || { echo "[ERROR] Cannot cd to $TARGET_DIR"; exit 1; }
+
+if [ ! -d ".git" ]; then
+  echo "[ERROR] Not a git repository: $TARGET_DIR"
   exit 1
 fi
-
-cd "$REPO_DIR" || { echo "[ERROR] Cannot cd to $REPO_DIR"; exit 1; }
 
 OWNER_REPO=$(git remote get-url origin 2>/dev/null | sed 's/.*github.com[:/]//' | sed 's/\.git$//')
 
