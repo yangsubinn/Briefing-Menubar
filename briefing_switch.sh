@@ -20,3 +20,6 @@ TEMP=$(mktemp)
 echo "$NEW_REPO" > "$TEMP"
 [ -f "$REPOS_FILE" ] && grep -v "^${NEW_REPO}$" "$REPOS_FILE" | head -4 >> "$TEMP"
 mv "$TEMP" "$REPOS_FILE"
+
+# SwiftBar 전체 갱신
+open -g "swiftbar://refreshallplugins"
